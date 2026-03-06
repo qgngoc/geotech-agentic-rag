@@ -1,12 +1,30 @@
-# VCAPTECH Agent
+# Geotech Agentic RAG
+
+## About this project
+
+This project is a geotechnical **Agentic RAG API** built with FastAPI. It is designed to answer general geotechnical questions using a local knowledge base and to run basic engineering calculations through tool-calling.
+
+At runtime, the `/chat` workflow combines:
+- **Input rails** to screen unsafe/off-topic prompts before generation.
+- **OpenAI LLM + tool calling** to decide when to retrieve context or execute calculations.
+- **Semantic retrieval from Qdrant** (client-scoped collections) using OpenAI embeddings.
+- **Citation extraction and tracing logs** so each answer can be audited via `trace_id`.
+
+The service also includes document ingestion and operations endpoints:
+- `/index_document` to parse and index files (`pdf`, `txt`, `xlsx`, `md`, `pptx`, `docx`, `csv`) into the vector database.
+- `/create_client` and `/delete_client/{client_id}` to manage tenant/client collections.
+- `/metrics/{tracing_id}` to inspect generation/retrieval/calculation logs stored in MongoDB.
+- `/get_llm_config_keys`, `/get_llm_config`, and `/get_read_file_config` for runtime config discovery.
+
+The codebase follows a layered, ports-and-adapters style (`core` use cases/entities, `adapters` for REST/services/repositories, and `infrastructure` wiring), making it straightforward to swap implementations such as vector DB, LLM provider, or logging backend.
 
 ## Getting Started
 
 ### Setup
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/qgngoc/vcaptech-chatbot.git
-   cd vcaptech-chatbot
+   git clone https://github.com/qgngoc/geotech-agentic-rag.git
+   cd geotech-agentic-rag
    ```
 
 2. **Configure environment variables:**
